@@ -8,14 +8,11 @@ export default class extends Controller {
         // This could be anything as long as it's unique.
         // https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
         this.localStorageKey    = window.location
+
+        // Retrieve data from localStorage when the Controller loads.
+        this.setFormData();
     }
     
-    saveToLocalStorage() {
-        const data = this.getFormData();
-        // Save the form data into localStorage. We need to convert the data Object into a String.
-        localStorage.setItem(this.localStorageKey, JSON.stringify(data));
-    }
-
     getFormData() {
         // Construct a set of of key/value pairs representing form fields and their values.
         // https://developer.mozilla.org/en-US/docs/Web/API/FormData
@@ -37,5 +34,28 @@ export default class extends Controller {
         // Return the key/value pairs as an Object. Each key is a field name, and each value is the field value.
         // https://developer.mozilla.org/en-us/docs/Web/JavaScript/Reference/Global_Objects/Object/fromEntries
         return Object.fromEntries(data)
+    }
+
+    saveToLocalStorage() {
+        const data = this.getFormData();
+        // Save the form data into localStorage. We need to convert the data Object into a String.
+        localStorage.setItem(this.localStorageKey, JSON.stringify(data));
+    }
+
+    setFormData() {
+        // See if there is data stored for this particular form.
+        if(localStorage.getItem(this.localStorageKey) != null) {
+            // We need to convert the String of data back into an Object.
+            const data = JSON.parse(localStorage.getItem(this.localStorageKey));
+            // This allows us to have access to this.formTarget in the loop below.
+            const form = this.formTarget;
+            // Loop through each key/value pair and set the value on the corresponding form field.  
+            Object.entries(data).forEach((entry)=>{
+                let name    = entry[0];
+                let value   = entry[1];
+                let input   = form.querySelector(`[name='${name}']`);
+                input && (input.value = value);
+            })
+        }
     }
 }

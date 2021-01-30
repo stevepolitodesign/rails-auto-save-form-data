@@ -12,6 +12,14 @@ export default class extends Controller {
         // Retrieve data from localStorage when the Controller loads.
         this.setFormData();
     }
+
+    clearLocalStorage() {
+        // See if there is data stored for this particular form.
+        if(localStorage.getItem(this.localStorageKey) != null) {
+            // Clear data from localStorage when the form is submitted.
+            localStorage.removeItem(this.localStorageKey);
+        }
+    }
     
     getFormData() {
         // Construct a set of of key/value pairs representing form fields and their values.

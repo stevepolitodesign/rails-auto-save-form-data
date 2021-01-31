@@ -90,3 +90,7 @@ export default class extends Controller {
     }
 }
 ```
+
+## Security Considerations
+
+I don't recommend using this technique on forms that store sensitive data such as passwords or credit cards, since their values would be stored in plain text in `localStorage`.
